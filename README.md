@@ -1,12 +1,16 @@
 # Symbolic link checks
 
-Checking for platform-specific issues with symbolic links using Python.
+[![ci](https://github.com/scivision/symlink-checks/actions/workflows/ci.yml/badge.svg)](https://github.com/scivision/symlink-checks/actions/workflows/ci.yml)
+
+Checking for platform-specific issues with symbolic links using Python or C++.
 Python
 [pathlib](https://docs.python.org/3/library/pathlib.html)
 is generally a robust high-level Python standard library interface that works on any platform.
 There were a few bugs with the filesystem on Windows that weren't fixed until Python 3.8.
 
-## Windows Developer Mode
+C++17 filesystem symbolic link capabilities are separately demonstrated in this project via CMake.
+
+## Python and Windows Developer Mode
 
 Python &ge; 3.8 is generally required to work with symbolic links on Windows.
 Additionally, either
