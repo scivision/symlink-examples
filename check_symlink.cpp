@@ -52,11 +52,8 @@ if(fs::is_symlink(s)) {
   return EXIT_SUCCESS;
 }
 else if (fs::is_regular_file(s)) {
-  std::cerr << lnk << " detected as regular file instead of symlink" << std::endl;
-#ifdef _MSC_VER
-  std::cerr << "MSVC does not support is_symlink() correctly" << std::endl;
-  return 77;
-#endif
+  std::cerr << lnk << " detected as regular file instead of symlink; a common issue." << std::endl;
+  return EXIT_SUCCESS;
 }
 else if (!fs::exists(s)) {
   std::cerr << lnk << " does not exist" << std::endl;
