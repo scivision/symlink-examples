@@ -35,9 +35,14 @@ endif()
 find_package(Python 3.8...4 COMPONENTS Interpreter)
 
 if(Python_Interpreter_FOUND)
-  find_program(pytest NAMES pytest)
-  # assumes pytest affiliated with this python version
+  execute_process(COMMAND ${Python_EXECUTABLE} -c "import pytest"
+  RESULT_VARIABLE ret
+  TIMEOUT 5
+  )
+  if(NOT ret EQUAL 0)
+    message(STATUS "Pytest not found: ${ret}")
+  endif()
 
   add_test(NAME pytest COMMAND Python::Interpreter -m pytest ${CMAKE_CURRENT_SOURCE_DIR})
-  set_tests_properties(pytest PROPERTIES DISABLED $<NOT:$<BOOL:${pytest}>>)
+  set_tests_properties(pytest PROPERTIES DISABLED $<BOOL:${ret}>)
 endif()
