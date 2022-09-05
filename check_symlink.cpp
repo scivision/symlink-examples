@@ -51,37 +51,28 @@ if(fs::is_symlink(s)) {
   std::cout << lnk << " is a symlink" << std::endl;
   return EXIT_SUCCESS;
 }
-else {
-  // a filesystem bug but can be worked around by read_symlink and equivalence check
-  auto t = fs::read_symlink(lnk, ec);
-  if (ec) {
-    std::cerr << "ERROR: could not read_symlink: " << ec.message() << std::endl;
-    return EXIT_FAILURE;
-  }
 
-  if(fs::equivalent(tgt, t)) {
-    std::cout << lnk << " is a symlink, but is_symlink didn't recognize this -- C++ stdlib filesystem bug." << std::endl;
-    return EXIT_SUCCESS;
-  }
-  else {
-    std::cerr << "ERROR: " << lnk << " is not a symlink" << std::endl;
-    return EXIT_FAILURE;
-  }
-
-  std::cerr << lnk << " is not a symlink" << std::endl;
-  return EXIT_FAILURE;
+// WORKAROUND: C++ filesystem bug by read_symlink and equivalence
+auto t = fs::read_symlink(lnk, ec);
+if (ec) {
+  std::cerr << "ERROR: could not read_symlink: " << lnk << " " << ec.message() << std::endl;
 }
+else if(fs::equivalent(tgt, t)) {
+  std::cout << lnk << " is a symlink, but is_symlink didn't recognize this -- C++ stdlib filesystem bug." << std::endl;
+  return EXIT_SUCCESS;
+}
+// END WORKAROUND
 
 // Unexpected failure, diagnose
- if (fs::is_regular_file(s)) {
-  std::cerr << lnk << " detected as regular file instead of symlink; a common issue." << std::endl;
-  return EXIT_SUCCESS;
+if (fs::is_regular_file(s)) {
+  std::cerr << lnk << " detected as regular file instead of symlink" << std::endl;
 }
 else if (!fs::exists(s)) {
   std::cerr << lnk << " does not exist" << std::endl;
 }
-
-std::cerr << "ERROR: " << lnk << " is not a symlink" << std::endl;
+else {
+  std::cerr << lnk << " is not a symlink" << std::endl;
+}
 
 return EXIT_FAILURE;
 }
