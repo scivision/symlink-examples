@@ -1,6 +1,7 @@
 // Check that filesystem is capable of symbolic links with this compiler.
 
 #include <iostream>
+#include <cstdlib>
 
 #ifndef __has_include
 #error "Compiler not C++17 compliant"
@@ -38,9 +39,8 @@ if(!fs::exists(lnk)) {
     #ifdef __MINGW32__
     std::cerr << "ERROR: this is a known issue with MinGW GCC" << std::endl;
     return 77;
-    #else
-    return EXIT_FAILURE;
     #endif
+    return EXIT_FAILURE;
   }
   std::cout << "created symlink: " << lnk << std::endl;
 }
@@ -51,7 +51,29 @@ if(fs::is_symlink(s)) {
   std::cout << lnk << " is a symlink" << std::endl;
   return EXIT_SUCCESS;
 }
-else if (fs::is_regular_file(s)) {
+else {
+  // a filesystem bug but can be worked around by read_symlink and equivalence check
+  auto t = fs::read_symlink(lnk, ec);
+  if (ec) {
+    std::cerr << "ERROR: could not read_symlink: " << ec.message() << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  if(fs::equivalent(tgt, t)) {
+    std::cout << lnk << " is a symlink, but is_symlink didn't recognize this -- C++ stdlib filesystem bug." << std::endl;
+    return EXIT_SUCCESS;
+  }
+  else {
+    std::cerr << "ERROR: " << lnk << " is not a symlink" << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  std::cerr << lnk << " is not a symlink" << std::endl;
+  return EXIT_FAILURE;
+}
+
+// Unexpected failure, diagnose
+ if (fs::is_regular_file(s)) {
   std::cerr << lnk << " detected as regular file instead of symlink; a common issue." << std::endl;
   return EXIT_SUCCESS;
 }
