@@ -61,7 +61,18 @@ if(!fs::exists(lnk)) {
 // auto s = fs::status(lnk);
 // this is a bug, doesn't work for is_symlink on Windows
 
-if(fs::is_symlink(lnk)) {
+if (!fs::exists(lnk)) {
+  std::cerr << lnk << " does not exist" << std::endl;
+  return EXIT_FAILURE;
+}
+
+#ifdef __MINGW32__
+  auto b = GetFileAttributes(lnk.string().c_str()) & FILE_ATTRIBUTE_REPARSE_POINT;
+#else
+  auto b = fs::is_symlink(lnk);
+#endif
+
+if(b) {
   std::cout << lnk << " is a symlink" << std::endl;
   return EXIT_SUCCESS;
 }
@@ -69,9 +80,6 @@ if(fs::is_symlink(lnk)) {
 // Unexpected failure, diagnose
 if (fs::is_regular_file(lnk)) {
   std::cerr << lnk << " detected as regular file instead of symlink" << std::endl;
-}
-else if (!fs::exists(lnk)) {
-  std::cerr << lnk << " does not exist" << std::endl;
 }
 else {
   std::cerr << lnk << " is not a symlink" << std::endl;
