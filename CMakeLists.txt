@@ -23,7 +23,6 @@ if(HAVE_CXX17_FILESYSTEM)
   add_executable(check_symlink check_symlink.cpp)
 
   add_test(NAME CppSymlink COMMAND check_symlink)
-  set_property(TEST CppSymlink PROPERTY SKIP_RETURN_CODE 77)
 endif()
 
 find_package(Python COMPONENTS Interpreter)
