@@ -19,4 +19,8 @@ for non-admin users to use symbolic links on Windows in general (even without Py
 To help avoid confusing error messages, we use functions from
 [softlink_check.py](./softlink_checks.py)
 in our programs to help ensure meaningful error messages are generated if necessary symbolic links are not available.
-Perhaps it would be better to include such functionality in Python itself going forward.
+
+Enable
+[Windows symbolic links](https://blogs.windows.com/windowsdeveloper/2016/12/02/symlinks-windows-10/)
+by enabling
+[Windows developer mode](https://learn.microsoft.com/en-us/windows/apps/get-started/developer-mode-features-and-debugging#additional-developer-mode-features).

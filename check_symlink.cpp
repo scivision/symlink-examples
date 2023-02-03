@@ -3,20 +3,18 @@
 #include <iostream>
 #include <cstdlib>
 
-#ifndef __has_include
-#error "Compiler not C++17 compliant"
+#ifdef __MINGW32__
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include <system_error>
 #endif
 
 #if __has_include(<filesystem>)
 #include <filesystem>
 namespace fs = std::filesystem;
-#elif __has_include(<experimental/filesystem>)
-#include <experimental/filesystem>
-namespace fs = std::experimental::filesystem;
 #else
 #error "No C++17 filesystem support"
 #endif
-
 
 
 int main(int argc, char **argv){
@@ -32,19 +30,36 @@ if(!fs::is_regular_file(tgt)) {
 std::error_code ec;
 
 if(!fs::exists(lnk)) {
+
+#ifdef __MINGW32__
+  auto p = SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE;
+  if(fs::is_directory(tgt))
+    p |= SYMBOLIC_LINK_FLAG_DIRECTORY;
+
+  auto s = CreateSymbolicLink(lnk.string().c_str(), tgt.string().c_str(), p);
+
+  if (!s) {
+    DWORD err = GetLastError();
+    std::string message = std::system_category().message(err);
+    std::cerr << "ERROR:CreateSymbolicLink: " << err << ": " << message << std::endl;
+    if(err == ERROR_PRIVILEGE_NOT_HELD)
+      std::cerr << R"(Enable Windows developer mode to use symbolic links:
+      https://learn.microsoft.com/en-us/windows/apps/get-started/developer-mode-features-and-debugging)" << std::endl;
+
+    return EXIT_FAILURE;
+  }
+#else
   fs::create_symlink(tgt, lnk, ec);
   if (ec) {
     std::cerr << "ERROR: could not create_symlink: " << ec.message() << std::endl;
-    #ifdef __MINGW32__
-    std::cerr << "ERROR: this is a known issue with MinGW GCC" << std::endl;
-    return 77;
-    #endif
     return EXIT_FAILURE;
   }
+#endif
   std::cout << "created symlink: " << lnk << std::endl;
 }
 
-// auto s = fs::status(lnk); // this is a bug, doesn't work for is_symlink on Windows
+// auto s = fs::status(lnk);
+// this is a bug, doesn't work for is_symlink on Windows
 
 if(fs::is_symlink(lnk)) {
   std::cout << lnk << " is a symlink" << std::endl;
