@@ -45,7 +45,4 @@ if(Python_Interpreter_FOUND AND "${Python_VERSION}" VERSION_GREATER_EQUAL 3.8)
   set_property(TEST pytest PROPERTY DISABLED $<NOT:$<BOOL:${Pytest_OK}>>)
 endif()
 
-# --- auto-ignore build directory
-if(NOT EXISTS ${PROJECT_BINARY_DIR}/.gitignore)
-  file(WRITE ${PROJECT_BINARY_DIR}/.gitignore "*")
-endif()
+file(GENERATE OUTPUT .gitignore CONTENT "*")
