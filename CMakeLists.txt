@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13...3.25)
+cmake_minimum_required(VERSION 3.13...3.26)
 
 project(SymlinkDemo LANGUAGES C CXX)
 
@@ -9,13 +9,7 @@ include(CheckCXXSymbolExists)
 
 set(CMAKE_CXX_STANDARD 17)
 
-if(MSVC)
-  set(CMAKE_REQUIRED_FLAGS /std:c++17)
-else()
-  set(CMAKE_REQUIRED_FLAGS -std=c++17)
-endif()
-
-check_cxx_symbol_exists(__cpp_lib_filesystem filesystem HAVE_CXX17_FILESYSTEM)
+check_cxx_symbol_exists(__cpp_lib_filesystem "filesystem" HAVE_CXX17_FILESYSTEM)
 
 # C++ example
 
