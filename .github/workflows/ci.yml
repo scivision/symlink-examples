@@ -4,18 +4,15 @@ on:
   push:
     paths:
       - "**.py"
-      - "**.cpp"
-      - "**.cmake"
-      - "**/CMakeLists.txt"
       - ".github/workflows/ci.yml"
 
 
 jobs:
 
-  core:
+  python:
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest]
+        os: [macos-latest, ubuntu-latest, windows-latest]
 
     runs-on: ${{ matrix.os }}
 
@@ -29,48 +26,4 @@ jobs:
 
     - run: mypy .
     - run: flake8
-
-    - run: cmake -Bbuild
-    - run: cmake --build build
-    - run: ctest --test-dir build -V
-
-
-  windows-gcc:
-    runs-on: windows-latest
-
-    defaults:
-      run:
-        shell: msys2 {0}
-    steps:
-    - uses: msys2/setup-msys2@v2
-      with:
-        update: true
-        install: >-
-          mingw-w64-x86_64-cmake
-          mingw-w64-x86_64-ninja
-          mingw-w64-x86_64-gcc
-
-    - uses: actions/checkout@v3
-
-    - run: cmake -Bbuild -G Ninja
-    - run: cmake --build build
-    - run: ctest --test-dir build -V
-
-
-  windows-msvc:
-    runs-on: windows-latest
-
-    steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v4
-      with:
-        python-version: '3.x'
-
-    - run: python -m pip install mypy flake8 pytest
-
-    - run: mypy .
-    - run: flake8
-
-    - run: cmake -Bbuild
-    - run: cmake --build build
-    - run: ctest --test-dir build -C Debug -V
+    - run: pytest

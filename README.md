@@ -2,22 +2,20 @@
 
 [![ci](https://github.com/scivision/symlink-checks/actions/workflows/ci.yml/badge.svg)](https://github.com/scivision/symlink-checks/actions/workflows/ci.yml)
 
-Checking for platform-specific issues with symbolic links using Python or C++.
-Python
-[pathlib](https://docs.python.org/3/library/pathlib.html)
-is generally a robust high-level Python standard library interface that works on any platform.
-There were a few bugs with the filesystem on Windows that weren't fixed until Python 3.8.
+Checking for platform-specific issues with symbolic links using Python [pathlib](https://docs.python.org/3/library/pathlib.html),
+a robust high-level Python standard library interface that works on any platform.
 
-C++17 filesystem symbolic link capabilities are separately demonstrated in this project via CMake.
+[C++ filesystem](https://en.cppreference.com/w/cpp/filesystem) symbolic links are demonstrated in
+[ffilesystem-concepts](https://github.com/scivision/ffilesystem-concepts).
 
-## Python and Windows Developer Mode
+## Windows symlinks
 
 Python &ge; 3.8 is generally required to work with symbolic links on Windows.
 Additionally, either
-[group permissions (Windows 10 Pro) or Developer Mode (Windows 10 non-Pro) need to be enabled](https://www.scivision.dev/windows-symbolic-link-permission-enable)
+[group permissions (Windows Pro) or Developer Mode (Windows non-Pro) need to be enabled](https://www.scivision.dev/windows-symbolic-link-permission-enable)
 for non-admin users to use symbolic links on Windows in general (even without Python).
 To help avoid confusing error messages, we use functions from
-[softlink_check.py](./softlink_checks.py)
+[test_symlink.py](./test_symlink.py)
 in our programs to help ensure meaningful error messages are generated if necessary symbolic links are not available.
 
 Enable
