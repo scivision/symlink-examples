@@ -11,7 +11,6 @@ import sys
 
 
 def main():
-
     try:
         test_symlink()
     except OSError:
@@ -21,7 +20,6 @@ def main():
 
 
 def symlink_help():
-
     msg = "Symbolic links are not working on your system."
     if os.name == "nt":
         if sys.version_info < (3, 8):
@@ -48,9 +46,10 @@ def test_symlink():
         if not f2.is_symlink():
             symlink_help()
 
+    print("OK: Symbolic link to actual file.")
+
 
 def test_bad_link():
-
     with tempfile.TemporaryDirectory() as d:
         r = Path(d)
 
@@ -61,6 +60,8 @@ def test_bad_link():
 
         if not broken_link.is_symlink():
             raise OSError("Symbolic links are not working on your system.")
+
+    print("OK: Symbolic link to non-existent file.")
 
 
 if __name__ == "__main__":
