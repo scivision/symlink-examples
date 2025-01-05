@@ -7,7 +7,6 @@ For example, Windows may restrict users from creating symbolic links.
 from pathlib import Path
 import tempfile
 import os
-import sys
 
 
 def main():
@@ -22,8 +21,6 @@ def main():
 def symlink_help():
     msg = "Symbolic links are not working on your system."
     if os.name == "nt":
-        if sys.version_info < (3, 8):
-            msg += "\n Python >= 3.8 required for symlinks in non-admin mode on Windows"
         msg += "\n You may need to enable Windows Developer Mode in Windows Control Panel for symlinks to work."
 
     raise OSError(msg)

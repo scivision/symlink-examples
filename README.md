@@ -5,13 +5,13 @@
 Checking for platform-specific issues with symbolic links using Python [pathlib](https://docs.python.org/3/library/pathlib.html),
 a robust high-level Python standard library interface that works on any platform.
 
-[C++ filesystem](https://en.cppreference.com/w/cpp/filesystem) symbolic links are demonstrated in
-[ffilesystem-concepts](https://github.com/scivision/ffilesystem-concepts).
+[C++ filesystem](https://en.cppreference.com/w/cpp/filesystem)
+symbolic links are thoroughly implemented in
+[Ffilesystem](https://github.com/scivision/ffilesystem).
 
 ## Windows symlinks
 
-Python &ge; 3.8 is generally required to work with symbolic links on Windows.
-Additionally, either
+Either
 [group permissions (Windows Pro) or Developer Mode (Windows non-Pro) need to be enabled](https://www.scivision.dev/windows-symbolic-link-permission-enable)
 for non-admin users to use symbolic links on Windows in general (even without Python).
 To help avoid confusing error messages, we use functions from
